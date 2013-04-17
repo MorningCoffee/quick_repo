@@ -1,0 +1,69 @@
+%html
+  %head
+    %title Discovery web-interface
+    %script{:src=>"http://code.jquery.com/jquery-latest.min.js", :type=>"text/javascript"}
+    %link{:href=>"/style.css", :rel=>"stylesheet"}
+    
+    :javascript
+      var fl = false;
+      
+      function tree(data, incl) {
+        if (incl <= 4)
+          if (typeof(data) == 'object') {
+            var ul = $('<ul>');
+            for (var i in data) {            
+              ul.append($('<li>').text(i).append(tree(data[i], incl + 1)));         
+            }        
+            return ul;
+          } else {    
+            var textNode = document.createTextNode(' => ' + data);
+            return textNode;
+          }
+        fl = true;
+      }
+    
+      function refresh() {
+        $.getJSON('/ajax/discovery/@dscv_id', function(data) {
+          $("#table").empty();
+          $("#message").text("");
+
+          if(data["status"] == 0) {
+            $("#table").show();
+            $("#message").hide();
+            i = 0;
+            $.each(data, function(key, val) {
+              if(i % 2 == 0)
+                grey = "table-grey";
+              else grey = "";
+              
+              if(key != "status" && key != "result") {
+                $("#table").append("<div class='table-key " + grey + "'>" + key + "</div>");
+                $("#table").append("<div class='table-val " + grey + "'>" + val + "</div>");
+                i++;
+              }
+            });
+            $("#table").append("<div class='clear'></div>");
+            $("#table").append("<div class='button'>Cancel</div><div class='clear'></div>");
+            
+            if(!fl)
+              $("#sub_table").append(tree(data["result"], 0));
+          }
+          else {
+            $("#table").hide();
+            $("#message").show();
+          
+            $("#message").text(data["message"]);
+          }
+          refresh();
+        });
+      }
+
+  %body{:onload=>"refresh()"}
+    #container
+      #message
+      #navigation
+        %a{:href=>"/"} Main
+        %span.sep →
+        %a{:href=>"@dscv_id"} @dscv_id
+      #table
+      #sub_table

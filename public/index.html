@@ -1,0 +1,51 @@
+%html
+  %head
+    %title Discovery web-interface
+    %script{:src=>"http://code.jquery.com/jquery-latest.min.js", :type=>"text/javascript"}
+    %link{:href=>"/style.css", :rel=>"stylesheet"}
+    :javascript
+      function refresh() {
+        $.getJSON('/ajax/all/', function(data) {
+          $("#table").empty();
+          $("#message").text("");
+
+          console.log(data["discoveries"]);
+          
+          if(data["status"] == 0) {
+            $("#table").show();
+            $("#message").hide();
+            i = 0;
+            for(index = 0; index < data["discoveries"].length; index++) {
+              $.each(data["discoveries"][index], function(key, val) {
+                if(i % 2 == 0)
+                  grey = "table-grey";
+                else grey = "";
+               
+                if(key != "Id") {
+                  $("#table").append("<div class='table-key " + grey + "'>" + key + "</div>");
+                  $("#table").append("<div class='table-val " + grey + "'>" + val + "</div>");
+                  i++;
+                } else if(key != "status") {
+                  $("#table").append("<div class='table-key " + grey + "'>" + key + "</div>");
+                  $("#table").append("<div class='table-val " + grey + "'><a href='/discovery/" + val + "'>" + val + "</a></div>");
+                  i++;
+                }
+              });
+              $("#table").append("<div class='clear table-sep'> </div>");
+            }
+            $("#table").append("<div class='clear'></div>");
+          }
+          else {
+            $("#table").hide();
+            $("#message").show();
+          
+            $("#message").text(data["message"]);
+          }
+          refresh();
+        });
+      }
+
+  %body{:onload=>"refresh()"}
+    #container
+      #message
+      #table
