@@ -1,0 +1,39 @@
+%html
+  %head
+    %title Discovery web-interface
+    %script{:src=>"http://code.jquery.com/jquery-latest.min.js", :type=>"text/javascript"}
+    %link{:href=>"/style.css", :rel=>"stylesheet"}
+    :javascript
+      $(document).ready(function(){
+      $("#search").submit(function() {
+        $.getJSON('/ajax/search?keywords=' + $("input[name=keywords]").val(), function(data) {
+          $("#result").text("");
+
+          console.log(data);
+          
+          temp = "";
+          if(data.length != 0) {
+            for(i = 0; i < data.length; i++) {
+              temp += "id: " + data[i]["_id"] + " :: " + "name: " + data[i]["_source"]["influencer"]["properties"]["first_name"] + "<br>";
+            }
+          }
+          
+          $("#result").html(temp);
+        });
+        
+        return false;
+      });});
+
+
+  %body
+    #container
+      %form#search
+        %fieldset
+          %label{:for => "keywords"} Keywords:
+          %input{:type => "text", :name => "keywords", :class => "form-text"}
+        %fieldset
+          %label{:for => "categories"} Categories:
+          %input{:type => "text", :name => "categories", :class => "form-text"}
+        %fieldset.form-actions
+          %input{:type => "submit", :value => "Search"}
+      #result

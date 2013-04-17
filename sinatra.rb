@@ -108,3 +108,31 @@ get "/ajax/all/" do
   json_post.to_s
   
 end
+
+get "/search" do
+
+  page = File.read("public/search.html")
+  
+  haml page
+  
+end
+
+get "/ajax/search" do
+  
+  q = URI.escape('{
+    "query" : {
+      "query_string" : {
+	"fields": ["keywords"],
+	"query":"' + params[:keywords] + '",
+	"default_operator" : "OR" }
+      }
+    }')
+  
+  url = "#{SEARCH_SERVER}influencer/user/_search?pretty=true&source=#{q}".to_s
+  res = Net::HTTP.get(URI.parse(url))
+  json_parsed = JSON.parse(res)
+  
+  out = json_parsed["hits"]["hits"]
+  out.to_json
+  
+end
