@@ -1,6 +1,9 @@
+echo "Checking dependencies..."
+
 if [[ "$(ruby -e 'print RUBY_VERSION')" != *The* ]] 
 	then
-		echo "RUBY: SUCCESS"
+		echo "Ruby: OK"
+		ruby --version
 	else
 		echo "INSTALL RUBY? (Y/N): "
 		read ruby_install
@@ -13,7 +16,7 @@ fi
 
 if [[ "$(gem --version)" != *The* ]] 
 	then
-		echo "GEM: SUCCESS"
+		echo "RubyGems: OK"
 	else
 		echo "INSTALL GEM? (Y/N): "
 		read gem_install
@@ -26,7 +29,7 @@ fi
 
 if [[ "$(gem list)" == *json* ]] 
 	then
-		echo "GEM JSON: SUCCESS"
+		echo "gem json: OK"
 	else
 		echo "INSTALL GEM JSON PLEASE"
 		echo "INSTAL JSON? (Y/N): "
@@ -39,7 +42,7 @@ fi
 
 if [[ "$(gem list)" == *launchy* ]] 
 	then
-		echo "LAUNCHY: SUCCESS"
+		echo "gem launchy: OK"
 	else
 		echo "INSTALL GEM LAUNCHY PLEASE"
 		echo "INSTAL LAUNCHY? (Y/N): "
