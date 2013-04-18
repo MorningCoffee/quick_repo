@@ -40,6 +40,33 @@ if [[ "$(gem list)" == *json* ]]
 		fi
 fi
 
+if [[ "$(gem list)" == *haml* ]] 
+	then
+		echo "gem haml: OK"
+	else
+		echo "INSTALL GEM HAML PLEASE"
+		echo "INSTAL HAML? (Y/N): "
+		read haml_install
+		if [ "$haml_install" == 'Y' ]
+			then
+				sudo gem install haml
+		fi
+fi
+
+
+if [[ "$(gem list)" == *sinatra* ]] 
+	then
+		echo "gem sinatra: OK"
+	else
+		echo "INSTALL GEM SINATRA PLEASE"
+		echo "INSTAL SINATRA? (Y/N): "
+		read sinatra_install
+		if [ "$sinatra_install" == 'Y' ]
+			then
+				sudo gem install sinatra
+		fi
+fi
+
 if [[ "$(gem list)" == *launchy* ]] 
 	then
 		echo "gem launchy: OK"

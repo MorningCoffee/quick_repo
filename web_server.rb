@@ -1,12 +1,17 @@
-# sinatra.rb
+require "rubygems"
 require "sinatra"
 require "net/http"
 require "uri"
-require "rubygems"
 require "json"
 require "haml"
 
 load "discovery_config.rb"
+
+get "/status" do
+
+  haml '%h1 Status page: OK'
+
+end
 
 get "/" do
 
