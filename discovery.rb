@@ -58,7 +58,7 @@ begin
   		end
   		check_first=false
 	end
-rescue
+rescue #review missing exception class specifier
 	check_arr=true
 	check_first=true
     CSV.foreach(FILE_PATH, "r:ISO-8859-15:UTF-8") do |csv_line|
@@ -83,6 +83,7 @@ else
 	}.to_json	
 end
 
+#review what's about URL_arr_unique?
 json_string = {
 		"name"=>name_arg, 
   		"input-urls"=>URL_arr_unique
@@ -93,7 +94,7 @@ test_json = json_string
 def valid_json?(json_)  
   JSON.parse(json_)  
   return true  
-rescue 
+rescue #error is not specified
   return false  
 end 
 
@@ -103,14 +104,14 @@ if valid_json?(test_json) == false
 end
 
 begin
-	uri = URI(POST_URL)
+	uri = URI(POST_URL) #we don't handle URI::InvalidURIError
 	res = Net::HTTP.post_form(uri, 'entity' => json_string)
-rescue
+rescue #error is not specified
 	puts "ERROR: POST REJECTED"
 	exit ERROR_POST_REJECTED
 end
 
-json_response = JSON.parse("#{res.body}").to_json   
+json_response = JSON.parse("#{res.body}").to_json   #errors are not handled
 hash_json = JSON.parse(json_response)
 discovery_id = hash_json['discovery-id']
 
