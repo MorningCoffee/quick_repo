@@ -3,6 +3,7 @@ require 'json'
 require 'net/http'
 require 'uri'
 require 'launchy'
+require 'logger'
 
 load 'discovery_config.rb'
 
@@ -11,6 +12,14 @@ ERROR_WRONG_ARGUMENT_NAME_FORMAT = 2
 ERROR_WRONG_ARGUMENT_PATHNAME = 3
 ERROR_POST_REJECTED = 4
 ERROR_WRONG_JSON_STRING_FORMAT = 5
+
+logger = Logger.new(STDOUT)
+logger.level = Logger::WARN
+
+
+logger.formatter = proc do |severity, datetime, progname, msg|
+  "#{datetime}: #{msg}\n"
+end
 
 if ARGV.length != 2
 	puts "ERROR: WRONG NUMBER OF ARGUMENTS"
@@ -32,7 +41,7 @@ check_name?(name_arg[0..6])
 
 def check_name_empty?(name)
 	if name == nil
-		puts "ERROR: WRONG ARGUMENT --NAME FORMAT"
+		puts "ERROR: WRONG ARGUMENT --NAME FORMAT EMPTY"
 		exit ERROR_WRONG_ARGUMENT_NAME_FORMAT
 	end
 end
@@ -58,7 +67,8 @@ begin
   		end
   		check_first=false
 	end
-rescue #review missing exception class specifier
+rescue => err
+	logger.error(err)
 	check_arr=true
 	check_first=true
     CSV.foreach(FILE_PATH, "r:ISO-8859-15:UTF-8") do |csv_line|
@@ -102,7 +112,8 @@ if valid_json?(test_json) == false
 	puts "ERROR: WRONG JSON STRING FORMAT" 
 	exit ERROR_WRONG_JSON_STRING_FORMAT
 end
-
+	
+end
 begin
 	uri = URI(POST_URL) #we don't handle URI::InvalidURIError
 	res = Net::HTTP.post_form(uri, 'entity' => json_string)
@@ -116,4 +127,7 @@ hash_json = JSON.parse(json_response)
 discovery_id = hash_json['discovery-id']
 
 Launchy::Browser.run(OPEN_URL + discovery_id)
+
+logger.close
+
 exit 0
