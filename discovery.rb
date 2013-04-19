@@ -63,7 +63,6 @@ begin
     	if check_first==false
   			if csv_line[csv_url_index]!=nil then
   				URL_arr<<csv_line[csv_url_index]
-  				#puts URL_arr=
   			end
   		end
   		check_first=false
@@ -94,14 +93,6 @@ else
 	}.to_json	
 end
 
-#review what's about URL_arr_unique?
-json_string = {
-		"name"=>name_arg, 
-  		"input-urls"=>URL_arr_unique
-}.to_json	
-
-test_json = json_string
-
 def valid_json?(json_)  
   JSON.parse(json_)  
   return true  
@@ -109,11 +100,11 @@ rescue #error is not specified
   return false  
 end 
 
-if valid_json?(test_json) == false
+if valid_json?(json_string) == false
 	puts "ERROR: WRONG JSON STRING FORMAT" 
 	exit ERROR_WRONG_JSON_STRING_FORMAT
 end
-	
+
 begin
 	uri = URI(POST_URL) #we don't handle URI::InvalidURIError
 	res = Net::HTTP.post_form(uri, 'entity' => json_string)
@@ -130,10 +121,10 @@ discovery_id = hash_json['discovery-id']
 
 #exec("nohup ruby web_server.rb &")
 
-cdm = "nohup ruby web_server.rb"
+cmd = "nohup ruby web_server.rb &&"
+system(cmd)
 
 Launchy::Browser.run(OPEN_URL + discovery_id)
 
-logger.close
-
+#logger.close
 exit 0
