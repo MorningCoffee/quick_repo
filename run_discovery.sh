@@ -20,6 +20,11 @@ if [[ "$(gem list)" != *launchy* ]]
 		sudo gem install launchy
 fi
 
+if [[ "$(gem list)" != *haml* ]]
+	then
+		sudo gem install haml
+fi
+
 ruby discovery.rb $1 $2
 
 echo "Finish code: " $?
