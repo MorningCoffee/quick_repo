@@ -30,23 +30,23 @@ name_arg = ARGV[0]
 FILE_PATH = ARGV[1]
 csv_url_index = 4
 
-def check_name?(name)
-	if name != "--name="
-		puts "ERROR: WRONG ARGUMENT --NAME FORMAT" 
-		exit ERROR_WRONG_ARGUMENT_NAME_FORMAT
-	end
-end
+#def check_name?(name)
+#	if name != "--name="
+#		puts "ERROR: WRONG ARGUMENT --NAME FORMAT" 
+#		exit ERROR_WRONG_ARGUMENT_NAME_FORMAT
+#	end
+#end
 
-check_name?(name_arg[0..6])
+#check_name?(name_arg[0..6])
 
-def check_name_empty?(name)
-	if name == nil
-		puts "ERROR: WRONG ARGUMENT --NAME FORMAT EMPTY"
-		exit ERROR_WRONG_ARGUMENT_NAME_FORMAT
-	end
-end
+#def check_name_empty?(name)
+#	if name == nil
+#		puts "ERROR: WRONG ARGUMENT --NAME FORMAT EMPTY"
+#		exit ERROR_WRONG_ARGUMENT_NAME_FORMAT
+#	end
+#end
 
-check_name_empty?(name_arg[7])
+#check_name_empty?(name_arg[7])
 
 if !File.exist?(FILE_PATH)
 	puts "ERROR: WRONG ARGUMENT PATHNAME"
@@ -63,6 +63,7 @@ begin
     	if check_first==false
   			if csv_line[csv_url_index]!=nil then
   				URL_arr<<csv_line[csv_url_index]
+  				#puts URL_arr=
   			end
   		end
   		check_first=false
@@ -127,9 +128,9 @@ discovery_id = hash_json['discovery-id']
 
 #nohup ruby server.rb
 
-#exec("nohup ruby web_server.rb")
+#exec("nohup ruby web_server.rb &")
 
-#exec("echo 111")
+cdm = "nohup ruby web_server.rb"
 
 Launchy::Browser.run(OPEN_URL + discovery_id)
 
