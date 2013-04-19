@@ -113,7 +113,6 @@ if valid_json?(test_json) == false
 	exit ERROR_WRONG_JSON_STRING_FORMAT
 end
 	
-end
 begin
 	uri = URI(POST_URL) #we don't handle URI::InvalidURIError
 	res = Net::HTTP.post_form(uri, 'entity' => json_string)
@@ -125,6 +124,12 @@ end
 json_response = JSON.parse("#{res.body}").to_json   #errors are not handled
 hash_json = JSON.parse(json_response)
 discovery_id = hash_json['discovery-id']
+
+#nohup ruby server.rb
+
+#exec("nohup ruby web_server.rb")
+
+#exec("echo 111")
 
 Launchy::Browser.run(OPEN_URL + discovery_id)
 

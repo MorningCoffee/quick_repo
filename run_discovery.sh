@@ -1,56 +1,23 @@
 echo "Checking dependencies..."
 
-if [[ "$(ruby -e 'print RUBY_VERSION')" != *The* ]] 
+if [[ "$(ruby -e 'print RUBY_VERSION')" == *The* ]] 
 	then
-		echo "Ruby: OK"
-		ruby --version
-	else
-		echo "INSTALL RUBY? (Y/N): "
-		read ruby_install
-		if [ "$ruby_install" == 'Y' ]
- 			then
-				sudo apt-get install ruby1.8 ruby1.8-dev irb rdoc ri	
-		fi
+		sudo apt-get install ruby1.8 ruby1.8-dev irb rdoc ri	
 fi
 
-
-if [[ "$(gem --version)" != *The* ]] 
+if [[ "$(gem --version)" == *The* ]] 
 	then
-		echo "RubyGems: OK"
-	else
-		echo "INSTALL GEM? (Y/N): "
-		read gem_install
-		if [ "$gem_install" == 'Y' ]
- 			then
-				sudo apt-get install rubygems	
-		fi
+		sudo apt-get install rubygems	
 fi
 
-
-if [[ "$(gem list)" == *json* ]] 
+if [[ "$(gem list)" != *json* ]] 
 	then
-		echo "gem json: OK"
-	else
-		echo "INSTALL GEM JSON PLEASE"
-		echo "INSTAL JSON? (Y/N): "
-		read json_install
-		if [ "$json_install" == 'Y' ]
-			then
-				sudo gem install json_pure
-		fi
+		sudo gem install json_pure
 fi
 
-if [[ "$(gem list)" == *launchy* ]] 
+if [[ "$(gem list)" != *launchy* ]] 
 	then
-		echo "gem launchy: OK"
-	else
-		echo "INSTALL GEM LAUNCHY PLEASE"
-		echo "INSTAL LAUNCHY? (Y/N): "
-		read launchy_install
-		if [ "$launchy_install" == 'Y' ]
-			then
-				sudo gem install launchy
-		fi
+		sudo gem install launchy
 fi
 
 ruby discovery.rb $1 $2
