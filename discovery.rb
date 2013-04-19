@@ -30,23 +30,23 @@ name_arg = ARGV[0]
 FILE_PATH = ARGV[1]
 csv_url_index = 4
 
-#def check_name?(name)
-#	if name != "--name="
-#		puts "ERROR: WRONG ARGUMENT --NAME FORMAT" 
-#		exit ERROR_WRONG_ARGUMENT_NAME_FORMAT
-#	end
-#end
+def check_name?(name)
+	if name != "--name="
+		puts "ERROR: WRONG ARGUMENT --NAME FORMAT" 
+		exit ERROR_WRONG_ARGUMENT_NAME_FORMAT
+	end
+end
 
-#check_name?(name_arg[0..6])
+check_name?(name_arg[0..6])
 
-#def check_name_empty?(name)
-#	if name == nil
-#		puts "ERROR: WRONG ARGUMENT --NAME FORMAT EMPTY"
-#		exit ERROR_WRONG_ARGUMENT_NAME_FORMAT
-#	end
-#end
+def check_name_empty?(name)
+	if name == nil
+		puts "ERROR: WRONG ARGUMENT --NAME FORMAT EMPTY"
+		exit ERROR_WRONG_ARGUMENT_NAME_FORMAT
+	end
+end
 
-#check_name_empty?(name_arg[7])
+check_name_empty?(name_arg[7])
 
 if !File.exist?(FILE_PATH)
 	puts "ERROR: WRONG ARGUMENT PATHNAME"
