@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Checking dependencies..."
 
 if [[ "$(ruby -e 'print RUBY_VERSION')" == *The* ]] 
@@ -24,6 +26,8 @@ if [[ "$(gem list)" != *haml* ]]
 	then
 		sudo gem install haml
 fi
+
+nohup ruby web_server.rb &
 
 ruby discovery.rb $1 $2
 

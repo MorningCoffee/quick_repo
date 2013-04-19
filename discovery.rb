@@ -22,7 +22,7 @@ logger.formatter = proc do |severity, datetime, progname, msg|
 end
 
 if ARGV.length != 2
-	puts "ERROR: WRONG NUMBER OF ARGUMENTS"
+	puts "error: wrong number of arguments"
 	exit ERROR_WRONG_NUMBER_OF_ARGUMENTS 
 end
  
@@ -32,7 +32,7 @@ csv_url_index = 4
 
 def check_name?(name)
 	if name != "--name="
-		puts "ERROR: WRONG ARGUMENT --NAME FORMAT" 
+		puts "error: wrong argument --name format" 
 		exit ERROR_WRONG_ARGUMENT_NAME_FORMAT
 	end
 end
@@ -41,7 +41,7 @@ check_name?(name_arg[0..6])
 
 def check_name_empty?(name)
 	if name == nil
-		puts "ERROR: WRONG ARGUMENT --NAME FORMAT EMPTY"
+		puts "error: wrong argument --name format empty"
 		exit ERROR_WRONG_ARGUMENT_NAME_FORMAT
 	end
 end
@@ -49,7 +49,7 @@ end
 check_name_empty?(name_arg[7])
 
 if !File.exist?(FILE_PATH)
-	puts "ERROR: WRONG ARGUMENT PATHNAME"
+	puts "error: wrong argument pathname"
 	exit ERROR_WRONG_ARGUMENT_PATHNAME
 end
 
@@ -96,35 +96,29 @@ end
 def valid_json?(json_)  
   JSON.parse(json_)  
   return true  
-rescue #error is not specified
+rescue => err
+  logger.error(err)	
   return false  
 end 
 
 if valid_json?(json_string) == false
-	puts "ERROR: WRONG JSON STRING FORMAT" 
+	puts "error: wrong json string format" 
 	exit ERROR_WRONG_JSON_STRING_FORMAT
 end
 
 begin
 	uri = URI(POST_URL) #we don't handle URI::InvalidURIError
 	res = Net::HTTP.post_form(uri, 'entity' => json_string)
-rescue #error is not specified
-	puts "ERROR: POST REJECTED"
+	json_response = JSON.parse("#{res.body}").to_json
+	hash_json = JSON.parse(json_response)
+	discovery_id = hash_json['discovery-id']
+rescue => err
+	logger.error(err)
 	exit ERROR_POST_REJECTED
 end
 
-json_response = JSON.parse("#{res.body}").to_json   #errors are not handled
-hash_json = JSON.parse(json_response)
-discovery_id = hash_json['discovery-id']
-
-#nohup ruby server.rb
-
-#exec("nohup ruby web_server.rb &")
-
-cmd = "nohup ruby web_server.rb &&"
-system(cmd)
-
 Launchy::Browser.run(OPEN_URL + discovery_id)
 
-#logger.close
+logger.close
+
 exit 0
