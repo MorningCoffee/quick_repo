@@ -87,4 +87,5 @@ curl -d entity='{ \"name\": \"#{NAME}_#{mindex}\", \"input-urls\": [")
 
     f.write("] }' -i #{POST_URL}")
   }
+  File::chmod(0777, "#{PREFIX}_#{mindex}.sh")
 end
