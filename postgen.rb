@@ -11,6 +11,7 @@ optparse = OptionParser.new do |opts|
     options[:name] = f
   end
   
+  options[:random] = 100
   opts.on("-r [RANDOM]", "Random urls") do |f|
     options[:random] = f || 100
   end
@@ -19,8 +20,10 @@ optparse = OptionParser.new do |opts|
     options[:path] = f
   end
   
+  options[:count] = 100
   opts.on("-c [COUNT]", "Count per file") do |f|
     options[:count] = f || 100
+    options[:random] = 0
   end
   
   options[:prefix] = "post"
@@ -36,6 +39,7 @@ NAME = options[:name]
 FILE_PATH = options[:path]
 COUNT = options[:count].to_i
 PREFIX = options[:prefix]
+RANDOM = options[:random].to_i
 
 
 csv_url_index = 4
@@ -52,14 +56,12 @@ end
 URL_arr.delete_at(0);
 
 master_arr = Array.new
-if options[:random].to_i == 0 then
+if RANDOM == 0 then
   master_arr = URL_arr.each_slice(COUNT).to_a
 else
   rnd = URL_arr.shuffle
-  if options[:random].to_i > URL_arr.size then
+  if RANDOM > URL_arr.size then
     RANDOM = URL_arr.size
-  else
-    RANDOM = options[:random].to_i
   end
   
   master_arr[0] = Array.new
