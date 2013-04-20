@@ -124,6 +124,14 @@ end
 
 get "/ajax/search" do
   
+  q = URI.escape('{"query" : {
+    "bool" : {
+      "should" : [
+        {"text" : {"keywords" : "' + params[:keywords] + '"}},
+        {"text" : {"categories" : "' + params[:categories] + '"}}
+      ]
+    }}}')
+=begin
   q = URI.escape('{
     "query" : {
       "query_string" : {
@@ -132,8 +140,9 @@ get "/ajax/search" do
 	"default_operator" : "OR" }
       }
     }')
+=end  
   
-  url = "#{SEARCH_SERVER}influencer/user/_search?pretty=true&source=#{q}".to_s
+  url = "#{SEARCH_SERVER}influencer/influencer/_search?pretty=true&source=#{q}".to_s
   res = Net::HTTP.get(URI.parse(url))
   json_parsed = JSON.parse(res)
   

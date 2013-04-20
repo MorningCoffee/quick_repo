@@ -6,7 +6,7 @@
     :javascript
       $(document).ready(function(){
       $("#search").submit(function() {
-        $.getJSON('/ajax/search?keywords=' + $("input[name=keywords]").val(), function(data) {
+        $.getJSON('/ajax/search?keywords=' + $("input[name=keywords]").val() + '&categories=' + $("input[name=categories]").val(), function(data) {
           $("#result").text("");
 
           console.log(data);

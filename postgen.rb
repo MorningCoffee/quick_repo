@@ -1,21 +1,47 @@
 require "csv"
+require "optparse"
 
 load "discovery_config.rb"
 
-puts "Name:"
-NAME = gets.chomp
 
-puts "File path:"
-#FILE_PATH = "csv_test.csv"
-FILE_PATH = gets.chomp
+options = {}
 
-puts "Count per file:"
-COUNT = gets.chomp.to_i
+optparse = OptionParser.new do |opts|
+  opts.on("--name NAME", "Job name") do |f|
+    options[:name] = f
+  end
+  
+  opts.on("-r [RANDOM]", "Random urls") do |f|
+    options[:random] = f || 100
+  end
+  
+  opts.on("--path PATH", "File path") do |f|
+    options[:path] = f
+  end
+  
+  opts.on("-c [COUNT]", "Count per file") do |f|
+    options[:count] = f || 100
+  end
+  
+  options[:prefix] = "post"
+  opts.on("--prefix [PREFIX]", "File's name prefix") do |f|
+    options[:prefix] = f || "post"
+  end
+end
+
+optparse.parse!
+
+
+NAME = options[:name]
+FILE_PATH = options[:path]
+COUNT = options[:count].to_i
+PREFIX = options[:prefix]
+
 
 csv_url_index = 4
 
 
-URL_arr=Array.new
+URL_arr = Array.new
 
 CSV.foreach(FILE_PATH, "r:ISO-8859-15:UTF-8") do |csv_line|
   if csv_line[csv_url_index] != nil then
@@ -25,15 +51,29 @@ end
 
 URL_arr.delete_at(0);
 
+master_arr = Array.new
+if options[:random].to_i == 0 then
+  master_arr = URL_arr.each_slice(COUNT).to_a
+else
+  rnd = URL_arr.shuffle
+  if options[:random].to_i > URL_arr.size then
+    RANDOM = URL_arr.size
+  else
+    RANDOM = options[:random].to_i
+  end
+  
+  master_arr[0] = Array.new
+  for i in 0..RANDOM - 1
+    master_arr[0] << rnd.pop
+  end
+end
 
-#index = URL_arr.size / COUNT
-master_arr = URL_arr.each_slice(COUNT).to_a
 
 master_arr.each_with_index do |mn, mindex|
-  File.open("post#{mindex}.sh", "w+") { 
+  File.open("#{PREFIX}_#{mindex}.sh", "w+") { 
     |f| f.write("#!/bin/bash
 
-curl -d entity='{ \"name\": \"#{NAME}\", \"input-urls\": [")
+curl -d entity='{ \"name\": \"#{NAME}_#{mindex}\", \"input-urls\": [")
 
     mn.each_with_index do |n, index|
       if index == mn.size - 1
