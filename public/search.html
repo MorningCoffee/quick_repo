@@ -4,29 +4,42 @@
     %script{:src=>"http://code.jquery.com/jquery-latest.min.js", :type=>"text/javascript"}
     %link{:href=>"/style.css", :rel=>"stylesheet"}
     :javascript
-      $(document).ready(function(){
-      $("#search").submit(function() {
-        $.getJSON('/ajax/search?keywords=' + $("input[name=keywords]").val() + '&categories=' + $("input[name=categories]").val(), function(data) {
-          $("#result").text("");
+      $(document).ready(function() {
+        $("#search").submit(function() {
+          $.getJSON('/ajax/search?keywords=' + $("input[name=keywords]").val() + '&categories=' + $("input[name=categories]").val(), function(data) {
+            $("#table").empty();
 
-          console.log(data);
+            if(data.length > 0) {
+              i = 0;
+              for(j = 0; j < data.length; j++) {
+                $.each(data[j]["_source"], function(key, val) {
+                if(i % 2 == 0)
+                    grey = "table-grey";
+                  else grey = "";
+              
+                  if(key != "status" && key != "result") {
+                    $("#table").append("<div class='table-key " + grey + "'>" + key + "</div>");
+                    $("#table").append("<div class='table-val " + grey + "'>" + val.toString().replace(/,/g, ", ") + "</div>");
+                    i++;
+                  }
+                });
+                $("#table").append("<div class='clear'></div>");
+              }
+            } else
+              $("#table").append("<div>Empty search result</div>");
+          });
           
-          temp = "";
-          if(data.length != 0) {
-            for(i = 0; i < data.length; i++) {
-              temp += "<div>website: " + data[i]["_source"]["website_url"] + " :: " + "name: " + data[i]["_source"]["first_name"] + "</div>";
-            }
-          }
-          
-          $("#result").html(temp);
+          return false;
         });
-        
-        return false;
-      });});
+      });
 
 
   %body
     #container
+      #navigation
+        %a{:href=>"/"} Main
+        %span.sep →
+        %a{:href=>""} Search
       %form#search
         %fieldset
           %label{:for => "keywords"} Keywords:
@@ -36,4 +49,4 @@
           %input{:type => "text", :name => "categories", :class => "form-text"}
         %fieldset.form-actions
           %input{:type => "submit", :value => "Search"}
-      #result
+      #table
