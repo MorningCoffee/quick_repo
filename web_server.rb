@@ -24,9 +24,9 @@ end
 get "/discovery/:discovery_id" do
 
   page = File.read("public/discovery.html")
-  page.sub! "@dscv_id", params[:discovery_id].to_s
   
-  haml page
+  
+  haml page.gsub("@dscv_id", params[:discovery_id].to_s)
   
 end
 
@@ -124,23 +124,23 @@ end
 
 get "/ajax/search" do
   
+  fields = ""
+  if params[:keywords] != ""
+    fields += '{"query_string" : {"default_field" : "keywords", "query" : "' + params[:keywords] + '"}}'
+    
+    if params[:categories] != ""
+      fields += ', '
+    end
+  end
+  
+  if params[:categories] != ""
+    fields += '{"query_string" : {"default_field" : "categories", "query" : "' + params[:categories] + '"}}'
+  end
+  
   q = URI.escape('{"query" : {
     "bool" : {
-      "should" : [
-        {"text" : {"keywords" : "' + params[:keywords] + '"}},
-        {"text" : {"categories" : "' + params[:categories] + '"}}
-      ]
+      "should" : [' + fields + ']
     }}}')
-=begin
-  q = URI.escape('{
-    "query" : {
-      "query_string" : {
-	"fields": ["keywords"],
-	"query":"' + params[:keywords] + '",
-	"default_operator" : "OR" }
-      }
-    }')
-=end  
   
   url = "#{SEARCH_SERVER}influencer/influencer/_search?pretty=true&source=#{q}".to_s
   res = Net::HTTP.get(URI.parse(url))
