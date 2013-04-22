@@ -8,22 +8,33 @@
         $("#search").submit(function() {
           $.getJSON('/ajax/search?keywords=' + $("input[name=keywords]").val() + '&categories=' + $("input[name=categories]").val(), function(data) {
             $("#table").empty();
-
+            $("#list").empty();
+            
             if(data.length > 0) {
               i = 0;
               for(j = 0; j < data.length; j++) {
+                lielm = "";
                 $.each(data[j]["_source"], function(key, val) {
                 if(i % 2 == 0)
                     grey = "table-grey";
-                  else grey = "";
-              
+                  else grey = "";                  
+                 
                   if(key != "status" && key != "result") {
-                    $("#table").append("<div class='table-key " + grey + "'>" + key + "</div>");
-                    $("#table").append("<div class='table-val " + grey + "'>" + val + "</div>");
+                    if(key == "id") {
+                      $("#table").append("<a name='" + val + "'></a><div class='table-key " + grey + "'>" + key + "</div>");
+                      lielm = val;
+                    }
+                    else $("#table").append("<div class='table-key " + grey + "'>" + key + "</div>");
+                    if(key == "photo_url" && val != null && val != "null")
+                      $("#table").append("<div class='table-val " + grey + "'><img src='" + val.toString().replace(/,/g, "' /><img src='") + "' /></div>");
+                    else $("#table").append("<div class='table-val " + grey + "'>" + val + "</div>");
                     i++;
+                    
+                    if(key == "website_url" && val != null && val != "null")
+                      $("#list").append("<li><a href='#" + lielm + "'>" + val + "</a></li>");
                   }
                 });
-                $("#table").append("<div class='clear'></div>");
+                $("#table").append("<div class='clear'><a href='#list'>Page up</a></div>");
               }
             } else
               $("#table").append("<div>Empty search result</div>");
@@ -49,4 +60,5 @@
           %input{:type => "text", :name => "categories", :class => "form-text"}
         %fieldset.form-actions
           %input{:type => "submit", :value => "Search"}
+      %ul#list
       #table

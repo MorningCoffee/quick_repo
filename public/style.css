@@ -8,6 +8,7 @@ body {
 .clear {
   clear: both;
   height: 30px;
+  text-align: right;
 }
 
 #container {
