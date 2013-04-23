@@ -1,9 +1,10 @@
-require 'csv'
-require 'json'
-require 'net/http'
-require 'uri'
-require 'launchy'
 require 'logger'
+require 'csv'
+require 'rubygems'
+require 'json'
+require 'uri'
+require 'net/http'
+require 'launchy'
 
 load 'discovery_config.rb'
 
