@@ -1,17 +1,19 @@
-var Search = Backbone.Model.extend({});
-var search = new Search(
-	{ keywords: 'C++', id: 1 }
-);
 
-var SearchView = Backbone.View.extend({
-	render: function() {
-		$(this.el).html('<li>' +  this.model.get('keywords') + '</li>');	
-	}
+$(document).ready(function() {
+	var Search = Backbone.Model.extend({});
+	var _search = new Search(
+		{ keywords: 'C++' }
+	);
+
+	var SearchView = Backbone.View.extend({
+		render: function() {
+			$(this.el).html('<li>' +  this.model.get('keywords') + '</li>');	
+		}
+	});
+	var _searchView = new SearchView(
+		{ model: _search }
+	);
+
+	_searchView.render();
+	$("div").html(_searchView.el);
 });
-var searchView = new SearchView(
-	{ model: search }
-);
-
-searchView.render();
-$('#app').append(searchView.el)
-console.log(searchView.el);
