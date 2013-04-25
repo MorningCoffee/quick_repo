@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
 	var Search = Backbone.Model.extend({});
 	var _search = new Search(
@@ -15,5 +14,5 @@ $(document).ready(function() {
 	);
 
 	_searchView.render();
-	$("div").html(_searchView.el);
+	$("#app").append(_searchView.el);
 });
