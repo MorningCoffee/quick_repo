@@ -5,14 +5,22 @@ $(document).ready(function() {
 	);
 
 	var SearchView = Backbone.View.extend({
-		render: function() {
-			$(this.el).html('<li>' +  this.model.get('keywords') + '</li>');	
+		el: "#app",
+
+		events: {
+			"change": "changeListener",
+			"submit form#anton": "submitListener"
+		},
+
+		submitListener: function(e) {
+			alert("Alah akbar");
+		},
+
+		changeListener: function(e){
+			console.log("Changed: " + e);
 		}
 	});
 	var _searchView = new SearchView(
 		{ model: _search }
 	);
-
-	_searchView.render();
-	$("#app").append(_searchView.el);
 });

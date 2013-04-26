@@ -3,7 +3,7 @@
 <head>
 	<title>TapInfluence Client</title>
 
-	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="libs/jquery.js"></script>
   	<script type="text/javascript" src="libs/underscore.js"></script>
   	<script type="text/javascript" src="libs/json2.js"></script>
   	<script type="text/javascript" src="libs/bootstrap.min.js"></script>
@@ -22,17 +22,16 @@
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="span12">
-					<form>
+					<form id="anton" >
 						<fieldset>
-							 <legend>Search panel</legend>
-							 <label>Keywords</label>
-							 <input type="text" />
-							<span class="help-block">Example block-level help text here.</span>
-							<label class="checkbox">
-								<input type="checkbox" /> 
-								Check me out
-							</label>
-							<button type="submit" class="btn">Submit</button>
+							<legend>Search panel</legend>
+							<label>Keywords</label>
+							<input type="text" name="keywords" id="keywords"/>
+							<label>Categories</label>
+							<input type="text" name="categories"/>
+						</fieldset>
+						<fieldset>
+							<button type="submit" class="btn">Search</button>
 						</fieldset>
 					</form>
 				</div>
